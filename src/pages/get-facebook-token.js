@@ -92,7 +92,14 @@ class FindFacebookIdPage extends React.Component {
           this.setState({ accessToken: data.accessToken, loading: false });
         })
         .catch(error => {
-          this.setState({ error, loading: false });
+          let err = error;
+
+          if (error.response) {
+            err = Error(error.response.data.message);
+            err.code = error.response.data.code;
+          }
+
+          this.setState({ error: err, loading: false });
         });
     });
   };
