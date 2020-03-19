@@ -44,6 +44,9 @@ const styles = theme => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff'
+  },
+  alert: {
+    overflow: 'auto'
   }
 });
 
@@ -89,7 +92,7 @@ class FindFacebookIdPage extends React.Component {
         timeout: 10000
       })
         .then(({ data }) => {
-          this.setState({ accessToken: data.accessToken, loading: false });
+          this.setState({ accessToken: data.access_token, loading: false });
         })
         .catch(error => {
           let err = error;
@@ -162,6 +165,9 @@ class FindFacebookIdPage extends React.Component {
                   <Grid item xs={12}>
                     {(!!accessToken || !!error) && (
                       <Alert
+                        classes={{
+                          root: classes.alert
+                        }}
                         variant="filled"
                         severity={!error ? 'success' : 'error'}
                       >
