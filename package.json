@@ -16,11 +16,14 @@
     "@material-ui/lab": "^4.0.0-alpha.45",
     "axios": "^0.19.2",
     "lodash": "^4.17.15",
+    "md5": "^2.2.1",
     "moment": "^2.24.0",
     "next": "^9.2.2",
+    "query-string": "^6.11.1",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-ga": "^2.7.0",
-    "react-helmet-async": "^1.0.4"
+    "react-helmet-async": "^1.0.4",
+    "uuid": "^7.0.2"
   }
 }

@@ -1,5 +1,4 @@
 import { Helmet, HelmetProvider } from 'react-helmet-async';
-import axios from 'axios';
 
 import {
   withStyles,
@@ -13,7 +12,7 @@ import {
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 
-import { getResultMessage } from '../utils';
+import { getFacebookAccessTokenURL } from '../utils/facebook-token';
 import { initGA, logPageView, logEvent } from '../utils/analytics';
 
 const styles = theme => ({
@@ -47,6 +46,10 @@ const styles = theme => ({
   },
   alert: {
     overflow: 'auto'
+  },
+  iframe: {
+    width: '100%',
+    height: '500px'
   }
 });
 
@@ -55,6 +58,7 @@ class FindFacebookIdPage extends React.Component {
     email: '',
     password: '',
     accessToken: null,
+    url: null,
     error: null,
     loading: false
   };
@@ -81,35 +85,35 @@ class FindFacebookIdPage extends React.Component {
 
     const { email, password } = this.state;
 
-    this.setState({ loading: true, accessToken: null, error: null }, () => {
-      axios({
-        url: `https://socialift-slack-bot.herokuapp.com/api/get-facebook-token`,
-        method: 'POST',
-        data: {
-          email,
-          password
-        },
-        timeout: 10000
-      })
-        .then(({ data }) => {
-          this.setState({ accessToken: data.access_token, loading: false });
-        })
-        .catch(error => {
-          let err = error;
+    this.setState({ url: null }, () => {
+      const url = getFacebookAccessTokenURL(email, password);
 
-          if (error.response) {
-            err = Error(error.response.data.message);
-            err.code = error.response.data.code;
-          }
-
-          this.setState({ error: err, loading: false });
-        });
+      this.setState({ url });
     });
+
+    // window.open(url, '_blank');
+
+    // this.setState({ loading: true, accessToken: null, error: null }, () => {
+    //   getFacebookAccessToken(email, password)
+    //     .then(({ data }) => {
+    //       this.setState({ accessToken: data.access_token, loading: false });
+    //     })
+    //     .catch(error => {
+    //       let err = error;
+
+    //       if (error.response) {
+    //         err = Error(error.response.data.message);
+    //         err.code = error.response.data.code;
+    //       }
+
+    //       this.setState({ error: err, loading: false });
+    //     });
+    // });
   };
 
   render() {
     const { classes } = this.props;
-    const { email, password, accessToken, error, loading } = this.state;
+    const { email, password, accessToken, error, loading, url } = this.state;
 
     return (
       <HelmetProvider>
@@ -176,6 +180,7 @@ class FindFacebookIdPage extends React.Component {
                           : `Access Token: ${accessToken}`}
                       </Alert>
                     )}
+                    {!!url && <iframe className={classes.iframe} src={url} />}
                   </Grid>
                 </Grid>
               </form>

@@ -13,7 +13,6 @@ import {
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 
-import { getResultMessage } from '../utils';
 import { initGA, logPageView, logEvent } from '../utils/analytics';
 
 const styles = theme => ({
