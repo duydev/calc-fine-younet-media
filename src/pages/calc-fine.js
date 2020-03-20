@@ -1,3 +1,5 @@
+import { Helmet, HelmetProvider } from 'react-helmet-async';
+
 import {
   withStyles,
   Paper,
@@ -81,59 +83,64 @@ class CalcFinePage extends React.Component {
     const { time, success, message } = this.state;
 
     return (
-      <Grid className={classes.root} container justify="center">
-        <Grid item md={6} xs={12}>
-          <Paper className={classes.paper}>
-            <Typography variant="h4" align="center">
-              Tính Tiền Phạt Đi Trễ
-            </Typography>
-            <form className={classes.form} onSubmit={this.handleSubmit}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    type="time"
-                    label="Thời gian bạn đến công ty"
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true
-                    }}
-                    fullWidth
-                    value={time}
-                    onChange={this.handleChangeTime}
-                  />
-                </Grid>
-                <Grid item xs={12} container justify="center">
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    disabled={!time}
-                  >
-                    Tính tiền phạt
-                  </Button>
-                </Grid>
-                <Grid item xs={12}>
-                  {!!message && (
-                    <Alert
-                      variant="filled"
-                      severity={success ? 'success' : 'error'}
+      <HelmetProvider>
+        <Helmet>
+          <title>Tính tiền phạt đi trễ YouNet Media - DuyDev's Tools</title>
+        </Helmet>
+        <Grid className={classes.root} container justify="center">
+          <Grid item md={6} xs={12}>
+            <Paper className={classes.paper}>
+              <Typography variant="h4" align="center">
+                Tính Tiền Phạt Đi Trễ
+              </Typography>
+              <form className={classes.form} onSubmit={this.handleSubmit}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextField
+                      type="time"
+                      label="Thời gian bạn đến công ty"
+                      className={classes.textField}
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                      fullWidth
+                      value={time}
+                      onChange={this.handleChangeTime}
+                    />
+                  </Grid>
+                  <Grid item xs={12} container justify="center">
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      disabled={!time}
                     >
-                      {message}
-                    </Alert>
-                  )}
+                      Tính tiền phạt
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    {!!message && (
+                      <Alert
+                        variant="filled"
+                        severity={success ? 'success' : 'error'}
+                      >
+                        {message}
+                      </Alert>
+                    )}
+                  </Grid>
                 </Grid>
-              </Grid>
-            </form>
-          </Paper>
-          <Typography className={classes.footer} variant="inherit">
-            Made with ❤️ by
-            <a className={classes.footerLink} href="https://duydev.me">
-              Trần Nhật Duy
-            </a>
-            .
-          </Typography>
+              </form>
+            </Paper>
+            <Typography className={classes.footer} variant="inherit">
+              Made with ❤️ by
+              <a className={classes.footerLink} href="https://duydev.me">
+                Trần Nhật Duy
+              </a>
+              .
+            </Typography>
+          </Grid>
         </Grid>
-      </Grid>
+      </HelmetProvider>
     );
   }
 }

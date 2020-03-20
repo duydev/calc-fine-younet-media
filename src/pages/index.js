@@ -18,13 +18,6 @@ const styles = theme => ({
   paper: {
     padding: theme.spacing(2)
   },
-  form: {
-    padding: theme.spacing(2),
-    paddingBottom: 0
-  },
-  textField: {
-    fontSize: '2em'
-  },
   footer: {
     display: 'flex',
     justifyContent: 'center',
@@ -39,12 +32,6 @@ const styles = theme => ({
 });
 
 class HomePage extends React.Component {
-  state = {
-    time: '',
-    success: false,
-    message: ''
-  };
-
   componentDidMount() {
     if (!window.GA_INITIALIZED) {
       initGA();
@@ -54,71 +41,16 @@ class HomePage extends React.Component {
     logPageView();
   }
 
-  handleChangeTime = e => {
-    const value = e.target.value;
-
-    this.setState({ time: value });
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-
-    const { time } = this.state;
-
-    logEvent(`Tính Tiền Phạt Đi Trễ`, 'Submit Form');
-
-    if (!time) return;
-
-    this.setState({ success: false, message: '' }, () => {
-      const { success, message } = getResultMessage(time);
-
-      this.setState({ success, message });
-    });
-  };
-
   render() {
     const { classes } = this.props;
-    const { time, success, message } = this.state;
 
     return (
       <Grid className={classes.root} container justify="center">
         <Grid item md={6} xs={12}>
           <Paper className={classes.paper}>
             <Typography variant="h4" align="center">
-              Tính Tiền Phạt Đi Trễ
+              DuyDev's Tools
             </Typography>
-            <form className={classes.form} onSubmit={this.handleSubmit}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    type="time"
-                    label="Thời gian bạn đến công ty"
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true
-                    }}
-                    fullWidth
-                    value={time}
-                    onChange={this.handleChangeTime}
-                  />
-                </Grid>
-                <Grid item xs={12} container justify="center">
-                  <Button type="submit" variant="contained" color="primary">
-                    Tính tiền phạt
-                  </Button>
-                </Grid>
-                <Grid item xs={12}>
-                  {!!message && (
-                    <Alert
-                      variant="filled"
-                      severity={success ? 'success' : 'error'}
-                    >
-                      {message}
-                    </Alert>
-                  )}
-                </Grid>
-              </Grid>
-            </form>
           </Paper>
           <Typography className={classes.footer} variant="inherit">
             Made with ❤️ by

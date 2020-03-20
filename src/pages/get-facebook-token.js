@@ -118,7 +118,7 @@ class GetFacebookTokenPage extends React.Component {
     return (
       <HelmetProvider>
         <Helmet>
-          <title>Get Facebook Access Token</title>
+          <title>Get Facebook Access Token - DuyDev's Tools</title>
         </Helmet>
         <Grid className={classes.root} container justify="center">
           <Grid item md={6} xs={12}>
