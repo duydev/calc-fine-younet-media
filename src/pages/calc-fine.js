@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import {
@@ -90,6 +91,9 @@ class CalcFinePage extends React.Component {
         <Grid className={classes.root} container justify="center">
           <Grid item md={6} xs={12}>
             <Paper className={classes.paper}>
+              <Link href="/">
+                <Button> &laquo; Back</Button>
+              </Link>
               <Typography variant="h4" align="center">
                 Tính Tiền Phạt Đi Trễ
               </Typography>

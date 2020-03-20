@@ -71,7 +71,7 @@ class HomePage extends React.Component {
               <Grid item xs={6}>
                 <Link href="/find-facebook-id">
                   <Card className={classes.card}>
-                    <CardActionArea>
+                    <CardActionArea style={{ height: '100%' }}>
                       <CardHeader title="Lấy Facebook id" />
                       <CardContent>Một chiếc tool hay hay. :)))</CardContent>
                     </CardActionArea>

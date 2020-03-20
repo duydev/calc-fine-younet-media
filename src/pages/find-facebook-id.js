@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import axios from 'axios';
 
@@ -103,6 +104,9 @@ class FindFacebookIdPage extends React.Component {
         <Grid className={classes.root} container justify="center">
           <Grid item md={6} xs={12}>
             <Paper className={classes.paper}>
+              <Link href="/">
+                <Button> &laquo; Back</Button>
+              </Link>
               <Typography variant="h4" align="center">
                 Find Facebook Id
               </Typography>
