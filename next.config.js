@@ -5,6 +5,9 @@ module.exports = {
   ) {
     return {
       '/': { page: '/' },
+      '/calc-fine': {
+        page: '/calc-fine'
+      },
       '/find-facebook-id': {
         page: '/find-facebook-id'
       },

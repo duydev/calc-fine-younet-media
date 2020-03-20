@@ -53,7 +53,7 @@ const styles = theme => ({
   }
 });
 
-class FindFacebookIdPage extends React.Component {
+class GetFacebookTokenPage extends React.Component {
   state = {
     email: '',
     password: '',
@@ -202,6 +202,6 @@ class FindFacebookIdPage extends React.Component {
   }
 }
 
-export default withStyles(styles, { name: 'FindFacebookIdPage' })(
-  FindFacebookIdPage
+export default withStyles(styles, { name: 'GetFacebookTokenPage' })(
+  GetFacebookTokenPage
 );

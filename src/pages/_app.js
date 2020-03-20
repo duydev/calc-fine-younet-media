@@ -19,7 +19,7 @@ export default class MyApp extends App {
     return (
       <React.Fragment>
         <Head>
-          <title>Tính tiền phạt đi trễ - Younet Media</title>
+          <title>DuyDev's Tools</title>
           <meta
             name="viewport"
             content="minimum-scale=1, initial-scale=1, width=device-width"
