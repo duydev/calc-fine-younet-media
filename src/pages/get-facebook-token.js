@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
+import copy from 'copy-to-clipboard';
 
 import {
   withStyles,
@@ -9,7 +10,8 @@ import {
   TextField,
   Button,
   Backdrop,
-  CircularProgress
+  CircularProgress,
+  Snackbar
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 
@@ -51,6 +53,9 @@ const styles = theme => ({
   iframe: {
     width: '100%',
     height: '100px'
+  },
+  parser: {
+    margin: '8px 0 32px'
   }
 });
 
@@ -63,7 +68,9 @@ class GetFacebookTokenPage extends React.Component {
     error: null,
     loading: false,
     parser: '',
-    parserError: false
+    parserError: false,
+    notify: false,
+    notifyMessage: ''
   };
 
   iframeRef = React.createRef();
@@ -80,23 +87,31 @@ class GetFacebookTokenPage extends React.Component {
   handleChangeTextField = fieldName => e => {
     let value = e.target.value;
     let parserError = false;
+    let notify = false;
+    let notifyMessage = '';
 
     if (fieldName === 'parser') {
       const regex = /"access_token":"([a-zA-Z0-9]+)"/;
+      const errorRegex = /"error_msg":"(.*?)"/;
 
       if (regex.test(value)) {
         const matches = regex.exec(value);
 
         value = matches[1];
-      } else {
-        const matches = /"error_msg":"(.*?)"/.exec(value);
+        copy(value);
+        notify = true;
+        notifyMessage = `Copied to Clipboard!`;
+      }
+
+      if (errorRegex.test(value)) {
+        const matches = errorRegex.exec(value);
 
         value = matches[1];
         parserError = true;
       }
     }
 
-    this.setState({ [fieldName]: value, parserError });
+    this.setState({ [fieldName]: value, parserError, notify, notifyMessage });
   };
 
   handleSubmit = e => {
@@ -106,11 +121,15 @@ class GetFacebookTokenPage extends React.Component {
 
     const { email, password } = this.state;
 
-    this.setState({ url: null }, () => {
+    this.setState({ loading: true, url: null }, () => {
       const url = getFacebookAccessTokenURL(email, password);
 
       this.setState({ url });
     });
+  };
+
+  handleCloseNotify = () => {
+    this.setState({ notify: false, notifyMessage: '' });
   };
 
   render() {
@@ -123,7 +142,9 @@ class GetFacebookTokenPage extends React.Component {
       loading,
       url,
       parser,
-      parserError
+      parserError,
+      notify,
+      notifyMessage
     } = this.state;
 
     return (
@@ -181,28 +202,23 @@ class GetFacebookTokenPage extends React.Component {
                     </Button>
                   </Grid>
                   <Grid item xs={12}>
-                    {(!!accessToken || !!error) && (
-                      <Alert
-                        classes={{
-                          root: classes.alert
-                        }}
-                        variant="filled"
-                        severity={!error ? 'success' : 'error'}
-                      >
-                        {error
-                          ? `Error: ${error.message}`
-                          : `Access Token: ${accessToken}`}
-                      </Alert>
-                    )}
                     {!!url && (
                       <iframe
                         id="response"
                         ref={this.iframeRef}
                         className={classes.iframe}
                         src={url}
+                        onLoad={() => {
+                          this.setState({
+                            loading: false,
+                            notify: true,
+                            notifyMessage: `Please copy response text and paste to Result parser.`
+                          });
+                        }}
                       />
                     )}
                     <TextField
+                      className={classes.parser}
                       label="Result parser"
                       value={parser}
                       onChange={this.handleChangeTextField('parser')}
@@ -227,6 +243,16 @@ class GetFacebookTokenPage extends React.Component {
         <Backdrop className={classes.backdrop} open={loading}>
           <CircularProgress color="inherit" />
         </Backdrop>
+        <Snackbar
+          open={notify}
+          autoHideDuration={2000}
+          onClose={this.handleCloseNotify}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert onClose={this.handleCloseNotify} severity="success">
+            {notifyMessage}
+          </Alert>
+        </Snackbar>
       </HelmetProvider>
     );
   }
