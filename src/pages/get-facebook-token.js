@@ -50,7 +50,7 @@ const styles = theme => ({
   },
   iframe: {
     width: '100%',
-    height: '500px'
+    height: '100px'
   }
 });
 
@@ -61,8 +61,12 @@ class GetFacebookTokenPage extends React.Component {
     accessToken: null,
     url: null,
     error: null,
-    loading: false
+    loading: false,
+    parser: '',
+    parserError: false
   };
+
+  iframeRef = React.createRef();
 
   componentDidMount() {
     if (!window.GA_INITIALIZED) {
@@ -74,9 +78,24 @@ class GetFacebookTokenPage extends React.Component {
   }
 
   handleChangeTextField = fieldName => e => {
-    const value = e.target.value;
+    let value = e.target.value;
+    let parserError = false;
 
-    this.setState({ [fieldName]: value });
+    if (fieldName === 'parser') {
+      const regex = /"access_token":"([a-zA-Z0-9]+)"/;
+      if (regex.test(value)) {
+        const matches = regex.exec(value);
+
+        value = matches[1];
+      } else {
+        const matches = /"error_msg":"(.*?)"/;
+
+        value = matches[1];
+        parserError = true;
+      }
+    }
+
+    this.setState({ [fieldName]: value, parserError });
   };
 
   handleSubmit = e => {
@@ -91,30 +110,20 @@ class GetFacebookTokenPage extends React.Component {
 
       this.setState({ url });
     });
-
-    // window.open(url, '_blank');
-
-    // this.setState({ loading: true, accessToken: null, error: null }, () => {
-    //   getFacebookAccessToken(email, password)
-    //     .then(({ data }) => {
-    //       this.setState({ accessToken: data.access_token, loading: false });
-    //     })
-    //     .catch(error => {
-    //       let err = error;
-
-    //       if (error.response) {
-    //         err = Error(error.response.data.message);
-    //         err.code = error.response.data.code;
-    //       }
-
-    //       this.setState({ error: err, loading: false });
-    //     });
-    // });
   };
 
   render() {
     const { classes } = this.props;
-    const { email, password, accessToken, error, loading, url } = this.state;
+    const {
+      email,
+      password,
+      accessToken,
+      error,
+      loading,
+      url,
+      parser,
+      parserError
+    } = this.state;
 
     return (
       <HelmetProvider>
@@ -184,7 +193,23 @@ class GetFacebookTokenPage extends React.Component {
                           : `Access Token: ${accessToken}`}
                       </Alert>
                     )}
-                    {!!url && <iframe className={classes.iframe} src={url} />}
+                    {!!url && (
+                      <iframe
+                        id="response"
+                        ref={this.iframeRef}
+                        className={classes.iframe}
+                        src={url}
+                      />
+                    )}
+                    <TextField
+                      label="Result parser"
+                      value={parser}
+                      onChange={this.handleChangeTextField('parser')}
+                      fullWidth
+                      multiline
+                      rows={5}
+                      error={parserError}
+                    />
                   </Grid>
                 </Grid>
               </form>
