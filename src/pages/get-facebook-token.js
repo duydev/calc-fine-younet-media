@@ -83,12 +83,13 @@ class GetFacebookTokenPage extends React.Component {
 
     if (fieldName === 'parser') {
       const regex = /"access_token":"([a-zA-Z0-9]+)"/;
+
       if (regex.test(value)) {
         const matches = regex.exec(value);
 
         value = matches[1];
       } else {
-        const matches = /"error_msg":"(.*?)"/;
+        const matches = /"error_msg":"(.*?)"/.exec(value);
 
         value = matches[1];
         parserError = true;
